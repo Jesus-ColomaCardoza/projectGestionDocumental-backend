@@ -1,5 +1,6 @@
 import { Sequelize, Op, DATE } from "sequelize";
 import Empleado from "../models/Empleado.js";
+import fs from 'fs'
 
 const getEmployees = async (req, res) => {
     try {
@@ -17,7 +18,7 @@ const getEmployees = async (req, res) => {
         }); //return a array
 
         //debug
-        console.log(Employees); // we show the query on console
+        // console.log(Employees); // we show the query on console
         res.json(Employees) // we send the array en json format
         //res.send('getting projects') // we send a message
 
@@ -59,7 +60,7 @@ const getEmployeesByName = async (req, res) => {
             attributes: ['id',
                 'profile_photo',
                 'nro_document',
-                [Sequelize.literal('employee_name || paternal_surname || maternal_surname'),'complete_name'],
+                [Sequelize.literal('employee_name || paternal_surname || maternal_surname'), 'complete_name'],
                 'phone',
                 'email',
                 'address',
@@ -99,46 +100,39 @@ const getEmployeesByName = async (req, res) => {
 //     }
 // }
 
-
 const createEmployee = async (req, res) => {
-    console.log(req.body);
-    console.log(req.file);
 
-    res.json({'message':'creating project GAAAAAAAAAAAA'})      
+    try {
+        const {
+            employee_name,
+            paternal_surname,
+            maternal_surname,
+            date_birth,
+            nro_document,
+            phone,
+            email,
+            address } = req.body;
+        const { filename } = req.file;
+        const newEmployee = await Empleado.create({
+            employee_name,
+            paternal_surname,
+            maternal_surname,
+            date_birth,
+            nro_document,
+            phone,
+            email,
+            address,
+            profile_photo: 'http://localhost:3000/' +filename
+        })
 
-    // try {
-    //     //code
-    //     const {
-    //         employee_name,
-    //         paternal_surname,
-    //         maternal_surname,
-    //         date_birth,
-    //         nro_document,
-    //         phone,
-    //         email,
-    //         address,
-    //         profile_photo,
-    //         state } = req.body
-    //     const newEmployee = await Empleado.create({
-    //         employee_name,
-    //         paternal_surname,
-    //         maternal_surname,
-    //         date_birth,
-    //         nro_document,
-    //         phone,
-    //         email,
-    //         address,
-    //         profile_photo,
-    //         state
-    //     })
-
-    //     //debug
-    //     console.log(req.body);
-    //     res.json(newEmployee)
-    //     //res.send('creating project')      
-    // } catch (error) {
-    //     return res.json({ message: error.message });
-    // }
+        //debug
+        console.log(req.body);
+        console.log(req.file);
+        res.json(newEmployee)
+        // res.send('employee created')      
+    } catch (error) {
+        return res.json({ message: error.message });
+    }
 }
 
 const updateEmployee = async (req, res) => {
@@ -160,6 +154,10 @@ const updateEmployee = async (req, res) => {
 
 const deleteEmployee = async (req, res) => {
     const { id } = req.params;
+    const { image } = req.params;
+
+    // console.log(id);
+    // console.log(image);
 
     try {
         await Empleado.destroy({
@@ -167,6 +165,7 @@ const deleteEmployee = async (req, res) => {
                 id,
             },
         });
+        fs.unlinkSync('./src/assets/media/profile_photos/'+image);
 
         //debug
         res.sendStatus(204)

@@ -122,7 +122,6 @@ const createUser = async (req, res) => {
         return res.json({ message: error.message });
     }
 }
-
 const updateUser = async (req, res) => {
     try {
         const {id}= req.params
@@ -147,7 +146,6 @@ const updateUser = async (req, res) => {
         return res.json({ message: error.message });
     }
 }
-
 const deleteUser = async (req, res) => {
     const { id } = req.params;
 

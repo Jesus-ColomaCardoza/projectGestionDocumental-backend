@@ -9,6 +9,6 @@ router.get('/empleado/get/:id', getEmployee)
 router.get('/empleado/getbyname/:name', getEmployeesByName)
 router.post('/empleado/create',photoUpload, createEmployee)
 router.put('/empleado/update/:id', updateEmployee)
-router.delete('/empleado/delete/:id', deleteEmployee)
+router.delete('/empleado/delete/:id/:image', deleteEmployee)
 
 export default router;
