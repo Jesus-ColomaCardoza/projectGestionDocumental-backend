@@ -15,7 +15,7 @@ const getEmployees = async (req, res) => {
                 'email',
                 'address',
                 'state']
-        }); //return a array
+        });
 
         //debug
         // console.log(Employees); // we show the query on console
@@ -34,10 +34,22 @@ const getEmployee = async (req, res) => {
         const employee = await Empleado.findOne({
             where: {
                 id
-            }
+            },
+            attributes: [
+                'profile_photo',
+                'nro_document',
+                'employee_name',
+                'paternal_surname',
+                'maternal_surname',
+                'date_birth',
+                'phone',
+                'email',
+                'address',
+                'state'
+            ]
         });
 
-        res.json(employee)
+        res.json(employee);
 
         if (!employee) {
             return res.status(404).json({ message: "Employee dosn't exists" })
@@ -99,7 +111,6 @@ const getEmployeesByName = async (req, res) => {
 //         return res.json({ message: error.message });
 //     }
 // }
-
 const createEmployee = async (req, res) => {
 
     try {
@@ -122,19 +133,18 @@ const createEmployee = async (req, res) => {
             phone,
             email,
             address,
-            profile_photo: 'http://localhost:3000/' +filename
+            profile_photo: 'http://localhost:3000/' + filename
         })
 
         //debug
-        console.log(req.body);
-        console.log(req.file);
+        // console.log(req.body);
+        // console.log(req.file);
         res.json(newEmployee)
         // res.send('employee created')      
     } catch (error) {
         return res.json({ message: error.message });
     }
 }
-
 const updateEmployee = async (req, res) => {
     try {
         const { id } = req.params
@@ -151,7 +161,43 @@ const updateEmployee = async (req, res) => {
         return res.json({ message: error.message });
     }
 }
+const updateEmployeeImage = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { image } = req.params;
+        const {filename}= req.file;
+        const {
+            employee_name,
+            paternal_surname,
+            maternal_surname,
+            date_birth,
+            nro_document,
+            phone,
+            email,
+            address } = req.body;
+        const updateEmployee = await Empleado.findByPk(id);
+        updateEmployee.employee_name=employee_name;
+        updateEmployee.paternal_surname=paternal_surname;
+        updateEmployee.maternal_surname=maternal_surname;
+        updateEmployee.date_birth=date_birth;
+        updateEmployee.nro_document=nro_document;
+        updateEmployee.phone=phone;
+        updateEmployee.email=email;
+        updateEmployee.address=address;
+        updateEmployee.profile_photo='http://localhost:3000/' + filename;
+        
+        fs.unlinkSync('./src/assets/media/profile_photos/' + image);
+        // fs.renameSync('./src/assets/media/profile_photos/' + filename,'./src/assets/media/profile_photos/' + image)
+        // updateEmployee.set(req.body);
 
+        await updateEmployee.save();
+
+        res.json(updateEmployee)
+
+    } catch (error) {
+        return res.json({ message: error.message });
+    }
+}
 const deleteEmployee = async (req, res) => {
     const { id } = req.params;
     const { image } = req.params;
@@ -165,7 +211,7 @@ const deleteEmployee = async (req, res) => {
                 id,
             },
         });
-        fs.unlinkSync('./src/assets/media/profile_photos/'+image);
+        fs.unlinkSync('./src/assets/media/profile_photos/' + image);
 
         //debug
         res.sendStatus(204)
@@ -183,5 +229,6 @@ export {
     getEmployeesByName,
     createEmployee,
     updateEmployee,
+    updateEmployeeImage,
     deleteEmployee
 }
