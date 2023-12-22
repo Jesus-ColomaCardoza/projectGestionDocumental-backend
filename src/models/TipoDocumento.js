@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../connection/connection.js"
-import Documento from "./Documento.js";
+// import Documento from "./Documento.js";
 
 const TipoDocumento=sequelize.define('TipoDocumento', {
 
@@ -19,17 +19,17 @@ const TipoDocumento=sequelize.define('TipoDocumento', {
     }
 
 }, {
-    tableName:'tipoDocumento'
+    tableName:'tiposDocumento'
 })
 
-TipoDocumento.hasMany(Documento,{
-    sourceKey:'id',
-    foreignKey:'tipodocumento_id'
-});
-Documento.belongsTo(TipoDocumento,{
-    foreignKey:'tipodocumento_id',
-    targetKey:'id'
-});
+// TipoDocumento.hasMany(Documento,{
+//     sourceKey:'id',
+//     foreignKey:'tipodocumento_id'
+// });
+// Documento.belongsTo(TipoDocumento,{
+//     foreignKey:'tipodocumento_id',
+//     targetKey:'id'
+// });
 
 export default TipoDocumento;
 

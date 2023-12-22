@@ -1,33 +1,30 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../connection/connection.js"
 
-const Documento=sequelize.define('Documento', {
+const Tramite=sequelize.define('Tramite', {
 
     id:{
         type:DataTypes.INTEGER,
         primaryKey:true,
         autoIncrement:true
-    },    
+    },
     subject:{
         type:DataTypes.STRING
     },  
     date_registration:{
         type:DataTypes.DATEONLY,
     },  
-    source:{
+    observation:{
         type:DataTypes.STRING
     },  
-    file:{
-        type:DataTypes.STRING
-    },
     state:{
         type:DataTypes.ENUM,
-        values:['sin firmar','firmado'],
-        defaultValue:'sin firmar'
+        values:['en trámite','finalizado'],
+        defaultValue:'en trámite'
     }
 
 }, {
-    tableName:'documentos',
+    tableName:'tramites',
     timestamps:false
 })
 
@@ -41,4 +38,4 @@ const Documento=sequelize.define('Documento', {
 //     targetKey:'id'
 // })
 
-export default Documento;
+export default Tramite;
