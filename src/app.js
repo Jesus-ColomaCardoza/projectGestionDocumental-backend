@@ -3,6 +3,7 @@ import usuarioRoutes from './routes/usuario.route.js'
 import areaRoutes from './routes/area.route.js'
 import empleadoRoutes from './routes/empleado.route.js'
 import tipoDocumentoRoutes from './routes/tipoDocumento.route.js'
+import remitente from './routes/remitente.route.js'
 import startRoutes from './routes/start.route.js';
 import cors  from "cors";
 import path from 'path'
@@ -25,6 +26,7 @@ app.use(usuarioRoutes);
 app.use(areaRoutes);
 app.use(empleadoRoutes);
 app.use(tipoDocumentoRoutes);
+app.use(remitente);
 
 export default app;
 

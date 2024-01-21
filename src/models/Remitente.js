@@ -12,16 +12,16 @@ const Remitente=sequelize.define('Remitente', {
         type:DataTypes.STRING
     },
     sender_name:{
-        type:DataTypes.STRING,
+        type:DataTypes.STRING
     },
     paternal_surname:{
-        type:DataTypes.STRING,
+        type:DataTypes.STRING
     },    
     maternal_surname:{
-        type:DataTypes.STRING,
+        type:DataTypes.STRING
     },   
     date_birth:{
-        type:DataTypes.DATEONLY,
+        type:DataTypes.DATEONLY
     },
  
     phone:{
@@ -38,10 +38,12 @@ const Remitente=sequelize.define('Remitente', {
     },
 
     ruc:{
-        type:DataTypes.STRING(12)
+        type:DataTypes.STRING,
+        defaultValue:'sin ruc'
     }, 
     business_name:{
         type:DataTypes.STRING,
+        defaultValue:'No presenta'
     }, 
    
     state:{
@@ -52,6 +54,7 @@ const Remitente=sequelize.define('Remitente', {
 
 }, {
     tableName:'remitentes',
+    timestamps:false
 })
 
 // Remitente.hasMany(Usuario,{

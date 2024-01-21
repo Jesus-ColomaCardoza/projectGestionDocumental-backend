@@ -19,7 +19,7 @@ const Usuario=sequelize.define('Usuario', {
         values:['activo','inactivo'],
         defaultValue:'activo'
     },
-    role:{
+    user_type:{
         type:DataTypes.ENUM,
         values:['admin','user'],
     }

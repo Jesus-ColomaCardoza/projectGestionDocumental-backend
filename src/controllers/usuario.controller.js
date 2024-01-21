@@ -33,15 +33,15 @@ const getUsersCustom = async (req, res) => {
                     attributes:['employee_name','paternal_surname','maternal_surname']
                 }
             ],
-            attributes:['id','user_name','role','state']
+            attributes:['id','user_name','user_type','state']
         });
-        
+
         res.json(user)
 
         if (!user) {
             return res.status(404).json({message:"User dosn't exists"})
         }
-            
+
     } catch (error) {
         return res.json({ message: error.message });
     }
@@ -67,7 +67,7 @@ const getUsersByName = async (req, res) => {
                     attributes:['employee_name','paternal_surname','maternal_surname']
                 }
             ],
-            attributes:['id','user_name','role','state']
+            attributes:['id','user_name','user_type','state']
         });
         console.log(users);
         res.json(users)
@@ -75,7 +75,40 @@ const getUsersByName = async (req, res) => {
         if (!users) {
             return res.status(404).json({message:"User dosn't exists"})
         }
-            
+
+    } catch (error) {
+        return res.json({ message: error.message });
+    }
+}
+const getUserLogin = async (req, res) => {
+    const {user_name,user_password} =req.params
+    try {
+        const user = await Usuario.findOne({
+            where:{
+                user_name,
+                user_password
+            },
+            include:[
+                {
+                    model:Area,
+                    required:true,
+                    attributes:['area_name']
+                },
+                {
+                    model:Empleado,
+                    required:true,
+                    attributes:['employee_name','paternal_surname','maternal_surname','profile_photo']
+                }
+            ],
+            attributes:['user_name','user_password','state','user_type']
+        });
+
+        if (!user) {
+            return res.status(404).json(null)
+        }else{
+            return res.json(user)   
+        }
+
     } catch (error) {
         return res.json({ message: error.message });
     }
@@ -87,15 +120,15 @@ const getUser = async (req, res) => {
             where:{
                 id
             },
-            attributes:['user_name','user_password','empleado_id','area_id','role']
+            attributes:['user_name','user_password','empleado_id','area_id','user_type']
         });
-        
+
         res.json(user)
 
         if (!user) {
             return res.status(404).json({message:"User dosn't exists"})
         }
-            
+
     } catch (error) {
         return res.json({ message: error.message });
     }
@@ -104,20 +137,20 @@ const createUser = async (req, res) => {
 
     try {
         //code
-        const { user_name, user_password, role,area_id,empleado_id } = req.body
+        const { user_name, user_password, user_type,area_id,empleado_id } = req.body
         const newUser = await Usuario.create({
             user_name,
             user_password,
-            role,
+            user_type,
             area_id,
             empleado_id
-          
+
         })
 
         //debug
         console.log(req.body);
         res.json(newUser)
-        //res.send('creating project')      
+        //res.send('creating project')
     } catch (error) {
         return res.json({ message: error.message });
     }
@@ -126,20 +159,20 @@ const updateUser = async (req, res) => {
     try {
         const {id}= req.params
 
-        // const {user_name,user_password,observation,state,role}= req.body
-    
+        // const {user_name,user_password,observation,state,user_type}= req.body
+
         const updateUser= await Usuario.findByPk(id);
-    
+
         // updateUser.user_name=user_name;
         // updateUser.user_password=user_password;
         // updateUser.observation=observation;
         // updateUser.state=state;
-        // updateUser.role=role;
-    
+        // updateUser.user_type=user_type;
+
         updateUser.set(req.body);
-        
+
         await updateUser.save();
-    
+
         res.json(updateUser)
 
     } catch (error) {
@@ -154,10 +187,10 @@ const deleteUser = async (req, res) => {
             where:{
                 id,
             },
-        }); 
+        });
 
         //debug
-        res.sendStatus(204) 
+        res.sendStatus(204)
 
     } catch (error) {
         return res.json({ message: error.message });
@@ -170,6 +203,7 @@ export {
     getUsersCustom,
     getUsersByName,
     getUser,
+    getUserLogin,
     createUser,
     updateUser,
     deleteUser
